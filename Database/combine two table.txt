@@ -1,0 +1,8 @@
+---check point: left join
+select 
+FirstName,
+LastName,
+City,
+State
+from person p
+left join address a on p.personid = a.personid
