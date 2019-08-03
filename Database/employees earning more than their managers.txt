@@ -1,0 +1,19 @@
+---I use 3 ways to write the code by put conditions in different parts of the query
+---and the run time is listed
+
+---solution 1 Runtime: 210 ms
+select e.name as employee
+from employee e
+left join employee m on e.managerid = m.id
+where e.salary > m.salary
+
+---solution 2 Runtime: 313 ms
+select e.name as employee
+from employee e, employee m 
+where e.managerid = m.id
+and e.salary > m.salary
+
+---solution 3 Runtime: 296 ms
+select e.name as employee
+from employee e
+inner join employee m on e.managerid = m.id and e.salary > m.salary

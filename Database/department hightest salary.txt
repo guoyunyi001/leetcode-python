@@ -1,0 +1,20 @@
+---check points: not in 
+---solution 1 Runtime: 302s
+select d.name department, 
+       n.name employee, 
+	   e.salary salary
+ from (
+        select departmentid, 
+		        max(salary) salary 
+		from employee 
+		group by departmentid) e
+inner join department d on d.id = e.departmentid
+inner join employee n on n.salary=e.salary and n.departmentid = e.departmentid
+
+---solution 2 Runtime: 574s
+select distinct d.name department, e.name employee, e.salary
+     from employee e
+inner join department d on d.id = e.departmentid
+where e.salary = (select max(salary) 
+                    from employee 
+				  where departmentid = e.departmentid) 

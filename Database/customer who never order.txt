@@ -1,0 +1,11 @@
+---check points: not in 
+---solution 1
+select c.name customers
+from customers c 
+where c.id not in (select customerid from orders)
+
+---solution 2
+select c.name customers
+from customers c
+left join orders o on o.customerid = c.id
+where o.id is null
