@@ -1,0 +1,52 @@
+---check points: subquery in where clause; use of max
+
+
+
+
+--- solution 1 best performance so far
+--- logic: 1. use limit offset to find the nth hightest salary
+
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+  BEGIN
+  DECLARE M INT;
+  SET M=N-1;
+  RETURN (
+          select distinct salary 
+          from employee 
+          order by salary desc 
+          limit 1 offset m
+         );
+END
+
+--- solution 2 
+--- logic: 1. first subquery to find the top n-1 salary
+---        2. second subquery to find the (n-1)th hightest salary by choosing the minmum value in top n-1 salary
+---        3. find the nth hightest salary by selecting the maximum salary which is smaller than the n-1 th hisghest salary
+
+
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+  BEGIN
+  DECLARE M INT;
+  SET M=N-1;
+  
+  RETURN 
+   ( 
+    select max(salary) 
+     from employee
+    where salary < ( select min(salary) 
+                     from (select salary from employee order by salary desc limit m) top_n
+				   )
+   );
+END
+
+--- solution 3
+--- logic: 1. first find the n th hightest salary by choosing the minmum value in top n salary
+---        2. use case when to identify the case that there is no nth salary in the table
+
+  select 
+    case when count(salary)<n then null else min(salary) end 
+  from (
+        select distinct salary 
+		 from Employee 
+		order by salary desc limit n) top_n_employee
+
