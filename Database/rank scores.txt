@@ -1,0 +1,21 @@
+---check points: subquery in where clause; use of max
+
+--- solution 1 best performance so far
+--- logic: 1. find the number of salary smaller than the current salary
+select score, 
+      (select count(distinct score) 
+        from scores 
+	   where s.score <= score) rank
+  from scores s
+  order by score desc
+
+--- solution 2 
+--- logic: 1. first subquery to find the top n-1 salary
+---        2. second subquery to find the (n-1)th hightest salary by choosing the minmum value in top n-1 salary
+---        3. find the nth hightest salary by selecting the maximum salary which is smaller than the n-1 th hisghest salary
+select s1.score,
+  count(distinct s2.score) as rank
+from scores s1
+left join scores s2 on s2.score >= s1.score
+group by s1.id
+order by s1.score desc
