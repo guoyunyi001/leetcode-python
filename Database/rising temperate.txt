@@ -1,0 +1,18 @@
+---check points: not in 
+---solution 1 Runtime: 321 ms
+select w1.id
+  from weather w1, weather w2 
+where to_days(w1.recorddate) -1 = to_days(w2.recorddate)
+  and w1.temperature > w2.temperature
+
+---solution 2 Runtime: 327 ms
+select w1.id
+ from weather w1
+ left join weather w2 on  to_days(w1.recorddate) -1 = to_days(w2.recorddate)
+where w1.temperature > w2.temperature
+ 
+---solution 3 Runtime: 325 ms
+select w1.id
+ from weather w1, weather w2 
+where w1.temperature > w2.temperature
+  and datediff(w1.recorddate,w2.recorddate)=1 

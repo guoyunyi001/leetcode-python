@@ -1,0 +1,19 @@
+---check points: not in 
+---solution 2 Runtime: 595 ms
+select d.name department, e1.name employee, e1.salary
+   from employee e1
+   inner join department d on d.id = e1.departmentid
+   left join employee e2 on e2.departmentid = e1.departmentid and e2.salary >= e1.salary
+   group by  d.name, e1.name, e1.salary
+   having count(distinct e2.salary) <= 3
+   
+---solution 1 Runtime: 727 ms
+select d.name department, e1.name employee, e1.salary
+   from employee e1
+   inner join department d on d.id = e1.departmentid
+where (
+       select count(distinct e2.salary) 
+	     from employee e2 
+	   where e2.departmentid = e1.departmentid 
+	     and e2.salary >= e1.salary
+	   ) <= 3

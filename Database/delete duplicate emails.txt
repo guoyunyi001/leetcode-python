@@ -1,0 +1,14 @@
+---check points: not in 
+---solution 1 Runtime: 562 ms
+DELETE p1
+from person p1 
+where p1.id not in ( select m_id 
+                       from (select min(id) m_id, email 
+					          from person group by email) g
+				    )
+
+---solution 2 Runtime: 819 ms
+DELETE p1
+from person p1 person p2
+where p1.email = p2.email
+and p1.id > p2.id
