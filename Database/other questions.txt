@@ -1,0 +1,10 @@
+---other questions, http://206.81.6.248:12306/leetcode/database
+---q1
+select name
+from customer
+where id not in (select customerid from orders)
+
+---q2
+select player_id, min(event_date) as first_login
+from activity
+group by player_id
