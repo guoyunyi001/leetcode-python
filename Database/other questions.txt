@@ -8,3 +8,13 @@ where id not in (select customerid from orders)
 select player_id, min(event_date) as first_login
 from activity
 group by player_id
+
+---q3
+select max(salary) as salary
+from employee
+where salary < (select max(salary) from employee)
+
+---q4 
+select max(salary)
+from employee
+where salary <(select min(salary) from (select salary from employee order by salary desc limit m,1) e)
