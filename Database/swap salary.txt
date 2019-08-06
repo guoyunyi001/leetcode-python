@@ -1,0 +1,10 @@
+---check points: ASCII stands for American Standard Code for Information Interchange. 
+---It serves as a character encoding standard for modern computers. 
+---#select id, visit_date, people
+from (SELECT s1.id s1_id,s2.id ,s2.visit_date, s2.people 
+FROM stadium s1
+left join stadium s2 on s1.id <=s2.id and s2.id-2 <= s1.id
+where s1.people > 100 and s2.people >100) s
+group by s1_id
+having count(s1_id)>=3
+order by id

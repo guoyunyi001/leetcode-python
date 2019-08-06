@@ -1,0 +1,22 @@
+---check points: case when; subquery in select statement
+---solution 1 Runtime: 151 ms
+select *
+from cinema
+where description not like "boring" 
+and id%2=1
+select case when s1.id%2=1 and s1.id < (select count(*) from seat)
+                then s1.id+1 
+            when s1.id%2=0 
+                then s1.id-1 
+            else s1.id 
+       end id, s1.student
+from seat s1
+order by id
+
+---solution 2 Runtime: 185 ms
+select id, case when student is null then student1 else student end student
+from (select s1.id, s1.student student1, case when s1.id%2=1 then s2.student else s3.student end student
+from seat s1
+left join seat s2 on s1.id = s2.id-1
+left join seat s3 on s1.id = s3.id+1
+order by s1.id) s

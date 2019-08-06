@@ -1,0 +1,13 @@
+---check points: where, union
+---compare of union and or: UNION is faster when it comes to cases like scan two different column 
+---solution 1 Runtime: 191 ms
+select name, population, area 
+from world
+where population > 25000000
+or area > 3000000
+
+---solution 1 Runtime: 248 ms
+select name, population, area 
+from world
+where population > 25000000
+or area > 3000000

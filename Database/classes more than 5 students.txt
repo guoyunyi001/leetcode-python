@@ -1,0 +1,17 @@
+---check points: count, having
+---compare of union and or: UNION is faster when it comes to cases like scan two different column 
+---solution 1 Runtime: 184 ms
+select class
+from (select distinct student, class from courses ) c
+group by class 
+having count(student) >=5
+
+---solution 2 Runtime: 185 ms
+select class
+from (select distinct student) ct, class from courses group by class having count(distinct student) >=5) c
+
+---solution 3 Runtime: 189 ms
+select class
+ from courses
+ group by class
+having count(distinct student) >= 5

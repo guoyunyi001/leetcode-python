@@ -1,0 +1,14 @@
+---check points: text condition, not like "text" vs !=; for text not like performances better
+---solution 1 Runtime: 119 ms
+select *
+from cinema
+where description not like "boring" 
+and id%2=1
+order by rating desc
+
+---solution 2 Runtime: 140 ms
+select *
+from cinema
+where description != "boring" 
+and id%2=1
+order by rating desc
