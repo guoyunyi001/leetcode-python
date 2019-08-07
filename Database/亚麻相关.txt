@@ -1,0 +1,154 @@
+/*1082 sales analysis i
+description http://206.81.6.248:12306/leetcode/sales-analysis-i/description
+*/
+select product_id
+from
+(select product_id, sum(p.unit_price) as price
+from sales s
+left join product p on s.product_id=p.product_id
+group by product_id) p
+having p.price = max(price)
+
+
+/*1082 sales analysis ii
+description http://206.81.6.248:12306/leetcode/sales-analysis-ii/description
+*/
+select distinct buyer_id
+from sales s
+inner join (select * from product where name='S8') p1 on s.product_id=p1.product_id
+left join (select * from product where name='iPhone') p2 on s.product_id=p2.product_id
+where p2.name is null
+
+/*1084 sales analysis iii
+description http://206.81.6.248:12306/leetcode/sales-analysis-iii/description 
+*/
+select 
+      s.product_id,
+      p.name
+ from sales s
+ left join product p on s.product_id = p.id
+where s.sales_date<'2019-01-01' 
+  and s.sales_Date>'2019-03-31'
+  and p.id not in (select s.product_id 
+                     from sales 
+					where sales_date<'2019-01-01' 
+					   or sales_Date>'2019-03-31')
+
+/*1070 product sales analysis iii
+description http://206.81.6.248:12306/leetcode/product-sales-analysis-iii/description
+*/
+select s.product_id, s.year, sum(s.quantity) , s.price
+from sales s
+left join product p on s.product_id=p.id
+inner join (select product_id,min(year) from sales group by product_id) s2 on s2.product_id=s.id and s2.year=s.year
+group by s.product_id, s.year, s.price
+
+/*1069 product sales analysis ii
+description http://206.81.6.248:12306/leetcode/product-sales-analysis-ii/description
+*/
+select prduct_id, sum(quantity) as total_quantity
+from sales
+group by product_id
+
+/*1050 actors and directors who cooperate at least three times
+description http://206.81.6.248:12306/leetcode/actors-and-directors-who-cooperated-at-least-three-times/description
+*/
+select distinct actor_id, director_id
+from actordirector
+group by actor_id, director_id
+having count(*)>=3
+
+/*1050 customers who bought all the products
+description http://206.81.6.248:12306/leetcode/customers-who-bought-all-products/description
+solution https://code.dennyzhang.com/ search question name
+*/
+select customer_id
+from customer c
+group by customer_id
+having count(distinct *) = (select count(*) from product)
+
+/*1050 delete duplicate emails
+description http://206.81.6.248:12306/leetcode/delete-duplicate-emails/description
+*/
+select e1.email
+from email e1, email e2
+where e1.id>e2.id
+and e1.email=e2.email
+
+/*185 department top three salary
+description http://206.81.6.248:12306/leetcode/department-top-three-salaries/description
+*/
+select d.name department, e1.name, e1.salary
+from employee e1
+left join department d on d.id=e1.departmentid
+where (select count(distinct salary) from employee where salary >= e1.salary and departmentid = e1.department)<=3
+
+select d.name department, e1.name, e1.salary
+from employee e1
+left join department d on d.id=e1.departmentid
+left join employee e2 on e1.departmentid=e2.departmentid and e1.salary<=e2.salary
+group by e1.departmentid, e1.name, e1.salary
+having count(distinct e2.salary) <=3
+
+/*184 department hightest salary
+description http://206.81.6.248:12306/leetcode/department-highest-salary/description
+*/
+select d.name, e1.name, e1.salary 
+from employee e1
+left join department d on e1.departmentid=d.id
+where e1.salary=(select max(salary) from employee where departmentid=e1.department group by departmentid)
+
+/*183 customers who never order
+description http://206.81.6.248:12306/leetcode/customers-who-never-order/description
+*/
+select name customers
+from customer c
+where c.id not in (select customer id from orders)
+
+/*181 employees earning more than their managers
+description http://206.81.6.248:12306/leetcode/employees-earning-more-than-their-managers/description
+*/
+select e1.name employee
+from employee e1
+left join employee e2 on e1.managerid=e2.id
+where e1.salary>e2.salary
+
+/*178 rank scores
+description http://206.81.6.248:12306/leetcode/rank-scores/description
+*/
+select s1.score, count(s2.score) as rank
+from scores s1
+left join (select distinct scores from scores) s2 on s2.score>=s1.score
+group by s1.score
+
+
+select s.score, (select count(distinct scores) from scores where scores>=s.score) rank
+from scores s
+order by s.score desc
+
+/*177 nth highest salary
+description http://206.81.6.248:12306/leetcode/nth-highest-salary/description
+*/
+
+select max(salary)
+from employee 
+where salary <(
+select salary 
+from employee 
+order by salary desc
+)
+limit n-1 offset 1
+
+/*176 second highest salary
+description http://206.81.6.248:12306/leetcode/second-highest-salary/description
+*/
+select salary secondhightsalary
+from employee where salary<(select max(salary) from employee) 
+limit 1
+
+/*175 conbine two tables
+description http://206.81.6.248:12306/leetcode/combine-two-tables/description
+*/
+select firstname, lastname, city, state
+from person
+left join address on person.personid=address.personid

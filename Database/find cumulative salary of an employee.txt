@@ -1,0 +1,14 @@
+select e1.id, e1.month, sum(e2.salary) salary
+from
+(select e1.id, e1.month, e2.salary
+from employee e1 
+left join employee e2 on e2.month <= e1.month+2
+left join (select id, max(mon) month 
+			 from employee 
+			 group by id
+			 HAVING COUNT(*) > 1 ) max on e1.id = max.id and e1.month = max.month
+where max.monnth is null) 3_s
+group by e1.id, e1.month
+order by e1.id, e1.month, sum(e2.salary)
+
+
