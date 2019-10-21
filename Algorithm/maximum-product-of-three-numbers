@@ -1,0 +1,11 @@
+#solution 1
+class Solution:
+    def maximumProduct(self, nums: List[int]) -> int:
+        new_nums=sorted(nums)
+        return max(new_nums[-3]*new_nums[-2]*new_nums[-1],new_nums[0]*new_nums[1]*new_nums[-1])
+
+#solution 2
+class Solution:
+    def maximumProduct(self, nums: List[int]) -> int:
+        a, b = heapq.nlargest(3, nums), heapq.nsmallest(2, nums)#get the n largest and n smallest numbers of a list
+        return max(a[0]*a[1]*a[2],b[0]*b[1]*a[0])
