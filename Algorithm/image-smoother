@@ -1,0 +1,14 @@
+class Solution:
+    def imageSmoother(self, M: List[List[int]]) -> List[List[int]]:
+        new=[[0 for _ in range(len(M[0]))] for _ in range(len(M))]
+        direction = ((0,0),(0,1),(0,-1),(1,0),(1,-1),(1,1),(-1,0),(-1,1),(-1,-1))
+        for i in range(len(new)):
+            for j in range(len(new[0])):
+                total=0
+                c=0
+                for x,y in direction:
+                    if i+x<0 or i+x>=len(new) or j+y<0 or j+y>=len(new[0]):
+                        continue
+                    total=total+M[i+x][y+j]
+                    c=c+1
+                new[i][j]=total//c
