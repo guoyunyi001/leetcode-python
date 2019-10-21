@@ -1,0 +1,9 @@
+#comments: first find the consecutive sum of nums, and append the result in list p. 
+#Then calculate the differnece between p[i+k] and p[i], which would be the sum of nums[i] to num[i+k]
+#the maximum difference would be the max sum and devide the number by k would be the answer
+class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -> float:
+        p=[0]
+        for n in nums:
+            p.append(p[-1]+n)
+        return max(p[i+k]-p[i] for i in range(len(p)-k))/k
