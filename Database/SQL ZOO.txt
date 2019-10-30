@@ -1,0 +1,24 @@
+/*13*/
+select company_name, count(i.caller_id) abna
+from Caller c
+left join Issue i on c.caller_id=i.caller_id
+left join Customer cu.company_ref=c.company_ref
+where c.company_ref not in (select company_ref
+from Issue i
+left join Caller c on caller_id=cu.caller_id
+inner join Shift_type st on i.call_date>st.start_time and i.call_date<date_add(end_time, )) 
+order by count(i.caller_id)
+limit 1
+
+/*14*/
+select company_name, count(distinct c.caller_id) caller_count, count(call_ref) issue_count
+from Caller c
+left join Customer cu on cu.company_ref=c.company_ref
+left join Issue i on i.caller_id=c.caller_id
+where c.company_ref not in (select c.company_ref
+from Caller c
+left join Customer cu on cu.company_ref=c.company_ref
+left join (select caller_id, call_ref, call_date from Issue where date(call_date)='2017-08-13') i on i.caller_id=c.caller_id
+where i.call_ref is null) 
+and date(call_date)='2017-08-13'
+group by company_name

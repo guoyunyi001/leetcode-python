@@ -152,3 +152,83 @@ description http://206.81.6.248:12306/leetcode/combine-two-tables/description
 select firstname, lastname, city, state
 from person
 left join address on person.personid=address.personid
+
+/*579 conbine two tables
+description http://206.81.6.248:12306/leetcode/find-cumulative-salary-of-an-employee/description
+*/
+select e1.id, e1.month, sum(e2.salary) month_3
+from employee e1, employee e2,
+(select id, max(month) mm from employee group by id) e3
+where 
+e2.month-e1.month>=0 and e2.month-e1.month<3 and e1.id=e2.id
+and e2.month!=e3.mm and e2.id=e3.id
+group by e1.id, e1.month
+order e1.id asc, e2.month desc
+
+
+/*262 Trips and Users
+description http://206.81.6.248:12306/leetcode/trips-and-users/description
+*/
+select request_at "Day",  
+round((case when status!=‘completed’ then 1 else 0 end)/(count(*)),2) "Cancellation Rate"
+from trips t
+inner join users c on t.cliend_id=c.users_id
+inner join users d on t.driver_id=c.users_id
+where c.banned=’No’ and c.role=’client’
+  and d.banned=’No’ and d.role=’driver’
+  and request_at between ‘2013-10-01’ and ’2013-10-03’
+group by request_at
+
+/*1045 Customers Who Bought All Products
+description http://206.81.6.248:12306/leetcode/customers-who-bought-all-products/description
+*/
+select customer_id
+from customer 
+where customer_id not in (select customer_id from customers c right join product p on c.customer_id=p.customer_id where c.customer_id is null)
+
+/*569 Customers Median Employee Salary
+description http://206.81.6.248:12306/leetcode/median-employee-salary/description
+*/
+select e.*
+from employee e
+where abs((select count(salary) from employee e1 where e1.salary<=e.salary and e1.company=e.company)
+- (select count(salary) from employee e2 where e2.salary>=e.salary and e2.company=e.company))
+<=(select count(salary) from employee e3 where e3.salary=e.salary and e3.company=e.company)
+
+/*180 Consecutive Numbers
+description http://206.81.6.248:12306/leetcode/consecutive-numbers/description
+*/
+select distinct l1.id consecutivenums
+from logs l1, logs l2, logs l3
+where l1.id+1=l2.id and l2.id+1=l3.id
+and l1.nums=l2.nums and l2.nums=l3.nums
+
+/*614 Second Degree Follower
+description http://206.81.6.248:12306/leetcode/second-degree-follower/description
+*/
+select fr.follower, count(fe.followee) as num
+from follow fe
+left join follow fr on fr.follower=fe.followee
+group by fr.follower
+
+/*578 Get Highest Answer Rate Question
+description http://206.81.6.248:12306/leetcode/get-highest-answer-rate-question/description
+*/
+
+select q_num
+from (select q_num, sum(case when answer_id is null then 0 else 1 end)/sum(case when action='show' then 0 else 1 end) rate
+from survey_log
+group by q_num) s
+where s.rate=(select max(rate) from s)
+
+/*1225 Report Contiguous Dates
+description http://206.81.6.248:12306/leetcode/report-contiguous-dates/description
+*/
+select result, date_temp, date_add(date_temp, interval min(rn)) start_date, date_add(date_temp, interval min(rn)+count(*)) end_date
+from 
+(select result, date, rn, date_add(date, interal - rn) date_temp
+from (select result, date, row_num() over(partition by date) rn
+(select "Failed" as result, date from failed
+union all 
+select "Successed" as result, date from successed) ) date_rank
+) date_gap
