@@ -1,0 +1,20 @@
+----------------------Guest House----------------------
+/*Data structure reference: https://sqlzoo.net/wiki/Guest_House */
+/*6 Ruth Cadbury. Show the total amount payable by guest Ruth Cadbury for her room bookings. 
+    You should JOIN to the rate table using room_type_requested and occupants.*/
+    
+SELECT sum(nights*amount)
+FROM booking b 
+JOIN guest g ON b.guest_id = g.id
+join rate r on r.room_type=b.room_type_requested and r.occupancy=b.occupants
+WHERE first_name='Ruth' and last_name='Cadbury'
+
+/*6 Including Extras. Calculate the total bill for booking 5346 including extras.*/
+    
+select b.a+e.amount
+from (SELECT b.booking_id, sum(b.nights*r.amount) a
+FROM booking b 
+join rate r on r.room_type=b.room_type_requested and r.occupancy=b.occupants
+WHERE b.booking_id=5346
+group by b.booking_id) b
+join extra e on e.booking_id=b.booking_id
