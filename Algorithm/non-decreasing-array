@@ -1,0 +1,11 @@
+class Solution:
+#what's the difference between num and num[:]?
+    def checkPossibility(self, nums: List[int]) -> bool:
+        copy1=nums[:]
+        copy2=nums[:]
+        for i in range(len(nums)-1):
+            if nums[i+1]<nums[i]:
+                copy1[i]=nums[i+1]
+                copy2[i+1]=nums[i]
+                break
+        return copy1==sorted(copy1) or copy2==sorted(copy2)

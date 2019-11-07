@@ -1,0 +1,15 @@
+class Solution:
+    def largeGroupPositions(self, S: str) -> List[List[int]]:
+
+
+        large=[]
+        i=0
+        c=0
+        while i<len(S):
+            while c<len(S) and S[c]==S[i] :
+                c=c+1
+            if c-i>=3: 
+                large.append((i,c-1))
+            i=c
+        return large
+            
