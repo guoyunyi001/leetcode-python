@@ -1,0 +1,10 @@
+class Solution:
+    def flipAndInvertImage(self, A: List[List[int]]) -> List[List[int]]:
+        n=len(A)
+        m=len(A[0])
+        for i in range(n):
+            for j in range(int((m+1)/2)):
+                temp_a=A[i][j]
+                A[i][j]=abs(A[i][m-1-j]-1)
+                A[i][m-1-j]=abs(temp_a-1)
+        return A
